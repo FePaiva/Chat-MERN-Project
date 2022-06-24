@@ -1,0 +1,35 @@
+.signup__bg {
+  background-image: url(https://images.unsplash.com/photo-1607973560949-c7119a712ec4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDV8fHNtYXJ0cGhvbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=400&q=60);
+  height: 92vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+}
+
+.signup-profile-pic_container {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.signup-profile-pic{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 1px solid gray;
+  object-fit: cover;
+
+}
+
+
+.add-picture-icon{
+  position: absolute;
+  bottom: 0;
+  right: 10px;
+  color: green;
+  background: white;
+  cursor: pointer;
+  z-index: 99;
+}

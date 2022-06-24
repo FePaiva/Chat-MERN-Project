@@ -31,7 +31,7 @@ function Login() {
                   Login
                 </Button>
                 <div className="py-4"> 
-                  <p className="text-center">Don't have an account yet? <Link to="signup">Signup</Link> </p>
+                  <p className="text-center">Don't have an account yet? <Link to="/signup">Signup</Link> </p>
                 </div>
               </Form>
           </Col>
