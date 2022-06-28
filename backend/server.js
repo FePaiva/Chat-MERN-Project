@@ -1,8 +1,15 @@
 const express = require('express');
 const app = express();
+const userRoutes = require('./routes/userRoutes')
 
 const rooms = ['general', 'tech', 'finance', 'crypto'];
 const cors = require('cors');
+
+// link to user routes
+app.use('./users',userRoutes)
+
+
+require('./connection')
 
 // to receive data from the frontend
 app.use(express.urlencoded({extended: true}));
@@ -23,3 +30,4 @@ const io = require('socket.io')(server, {
 server.listen(PORT, () => {
   console.log('listening on port', PORT)
 })
+

@@ -95,7 +95,7 @@ function Signup() {
               {uploadingImg ? "Signing you up ... " : "Signup"}
             </Button>
             <div className="py-4"> 
-              <p className="text-center">Oh, you are a member! -> <Link to="/login">Login</Link> </p>
+              <p className="text-center">Oh, you are a member! - <Link to="/login">Login</Link> </p>
             </div>
           </Form>
       </Col>
