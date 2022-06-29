@@ -39,10 +39,12 @@ const UserSchema = new mongoose.Schema({
 // to hide(hash) the password before user is saved
 UserSchema.pre('save', function (next){
   const user = this;
-  if(!user.isModified('password')) return next();
+  if(!user.isModified('password')) 
+  return next();
 
   bcrypt.genSalt(10, function(err, salt){
-    if(err) return next(err);
+    if(err) 
+    return next(err);
 
     bcrypt.hash(user.password, salt, function(err, hash){
       if(err) return next(err);
@@ -66,10 +68,10 @@ UserSchema.statics.findByCredentials = async function (email, password) {
   if(!user) throw new Error('Invalid email or password.');
 
   const isMatch = await bcrypt.compare(password, user.password);
-  if(!isMatch) throw new Error('Invalid email or password')
+  if(!isMatch) throw new Error('Invalid email or password.')
   return user
 }
 
 const User = mongoose.model('User', UserSchema);
 
-module.export = User;
+module.exports = User;
