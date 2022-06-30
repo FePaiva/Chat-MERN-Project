@@ -6,13 +6,24 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Chat from './pages/Chat';
-import { useStore } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
+import { useState } from 'react';
+import { AppContext, socket } from './context/appContext';
 
 function App() {
+  const [rooms, setRooms] = useState([]);
+  const [currentRoom, setCurrentRoom] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [privateMemberMsg, setPrivateMemberMsg] = useState({});
+  const [newMessages, setNewMessages] = useState({});
 
-  const user = useStore((state) => state.user);
+// to access the state and grab the user (react-redux)
+  const user = useSelector((state) => state.user);
 
   return (
+    // All the states have to be passed as values so the components have access to them. Context documentation https://reactjs.org/docs/context.html#contextprovider
+    <AppContext.Provider value={{ socket, rooms, setRooms, currentRoom, setCurrentRoom, members, setMembers, messages, setMessages, privateMemberMsg, setPrivateMemberMsg, newMessages, setNewMessages}}>
       <BrowserRouter> 
           <Navigation />
           <Routes>
@@ -27,6 +38,7 @@ function App() {
 
           </Routes>
       </BrowserRouter>
+    </AppContext.Provider>
   );
 }
 

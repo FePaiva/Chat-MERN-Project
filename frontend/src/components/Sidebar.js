@@ -1,9 +1,14 @@
 import React from 'react'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
+import { useSelector } from 'react-redux'
 
 function Sidebar() {
   const rooms = ['first roon', 'second roon', 'third roon']
+  const user = useSelector((state) => state.user)
 
+  if(!user){
+    return <div className='alert alert-danger'>Please login to see the rooms.</div>
+  }
 
   return (
     <>
