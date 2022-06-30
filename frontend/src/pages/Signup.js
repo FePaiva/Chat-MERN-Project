@@ -1,8 +1,9 @@
 import React, {useState} from 'react'
 import { Container, Col, Form, Button, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "./Signup.css";
 import avatar from '../assets/avatar.jpg';
+import { useSignupUserMutation } from "../services/appApi";
 
 
 
@@ -11,6 +12,8 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [signupUser, { isLoading, error }] = useSignupUserMutation();
+  const navigate = useNavigate();
 
   //image upload states
   const [image, setImage] = useState(null);
@@ -20,7 +23,7 @@ function Signup() {
   function validateAvatar (e) {
     const file = e.target.files[0];
     if(file.size >= 2097152) {
-      return alert("Image size has to be up to 1mb.")
+      return alert("Image size has to be up to 2mb.")
     } else { 
       setImage(file);
       setImagePreview(URL.createObjectURL(file));
@@ -50,10 +53,18 @@ function Signup() {
 
   async function handleSignup(e){
     e.preventDefault();
-    if(!image) return alert("Please upload any image that you like :)")
+    if(!image) return alert("Please upload any image you like :)")
     const url = await uploadImage(image);
     console.log(url);
-  }
+
+    // to signup the user
+    signupUser({ name, email, password, picture: url }).then(({ data }) => {
+      if (data) {
+          console.log(data);
+          navigate("/chat");
+      }
+  });
+}
 
 
   return (
@@ -105,4 +116,4 @@ function Signup() {
   )
 }
 
-export default Signup
+export default Signup;

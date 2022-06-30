@@ -6,15 +6,23 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Chat from './pages/Chat';
+import { useStore } from 'react-redux';
 
 function App() {
+
+  const user = useStore((state) => state.user);
+
   return (
       <BrowserRouter> 
           <Navigation />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            {!user && ( 
+                <> 
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                </>
+            )}
             <Route path="/chat" element={<Chat />} />
 
           </Routes>

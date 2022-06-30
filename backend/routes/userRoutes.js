@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const User = require('../models/User');
 
-// to create a new user / signup
+// creating user
 router.post('/', async(req, res)=> {
   try {
     const {name, email, password, picture} = req.body;
@@ -20,8 +20,7 @@ router.post('/', async(req, res)=> {
   }
 })
 
-
-//  to login the user
+// login user
 
 router.post('/login', async(req, res)=> {
   try {
@@ -34,5 +33,6 @@ router.post('/login', async(req, res)=> {
       res.status(400).json(e.message)
   }
 })
+
 
 module.exports = router
