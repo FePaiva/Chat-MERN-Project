@@ -93,6 +93,27 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('notifications', room)
   })
 
+  // logout
+  app.delete('/logout', async(req, res) => {
+    try {
+      // getting the userid and newMessages from the body.
+      const {_id, newMessages} = req.body;
+      const user = await User.findById(_id);
+      user.status = "offline";
+      // new messages from fronted. Need to save that state.
+      user.newMessages = newMessages;
+      await user.save();
+      const members = await User.find();
+      // update the room with members.
+      socket.broadcast.emit('new-user', members);
+      res.status(200).send();
+    } catch(e){
+      console.log(e);
+      res.status(400).send();
+
+    }
+  })
+
 })
 
 server.listen(PORT, () => {
