@@ -80,6 +80,18 @@ io.on('connection', (socket) => {
     socket.emit('room-messages', roomMessages)
   })
 
+  // to send messages
+  socket.on('message-room', async(room, content, sender, time, date) => {
+    // checking if getting the content.
+    // console.log('new message', content)
+    const newMessage = await Message.create({ content, from: sender, time, date, to: room});
+    let roomMessages = await getLastMessagesFromRoom(room);
+    roomMessages = sortRoomMessagesByDate(roomMessages);
+    // to send messages to room
+    io.to(room).emit('room-messages', roomMessages);
+    // notify other members about the new message.
+    socket.broadcast.emit('notifications', room)
+  })
 
 })
 
