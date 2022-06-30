@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 const userRoutes = require('./routes/userRoutes')
-
+const User = require('./models/User')
+const Message = require('./models/Message')
 const rooms = ['general', 'tech', 'finance', 'crypto'];
 const cors = require('cors');
 
@@ -64,7 +65,7 @@ io.on('connection', (socket) => {
   // if there is a new user. Socket to listen for new-user
   socket.on('new-user', async () => {
     const members = await User.find();
-    // io.emit emits to all users that are in the room, that someone joined the room..
+    // io.emit emits to all users that are in the room, that someone joined the room. Documentation https://socket.io/docs/v4/emitting-events/
     io.emit('new-user', members)
   })
 
