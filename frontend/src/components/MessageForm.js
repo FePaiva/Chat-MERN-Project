@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { AppContext } from '../context/appContext';
@@ -7,11 +7,17 @@ import './MessageForm.css'
 function MessageForm() {
 
   const [message, setMessage] = useState('');
-  const { socket, currentRoom, setMessages, messages, privateMemberMsg, setPrivateMemberMsg} = useContext(AppContext)
-
+  const { socket, currentRoom, setMessages, messages, privateMemberMsg, setPrivateMemberMsg} = useContext(AppContext);
+  const messageEndRef = useRef(null);
   // to access the state and grab the user (react-redux)
-    const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
  
+  // scroll to bottom every time there is a new message
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages])
+
+
     function getFormattedDate() {
       const date = new Date();
       const year = date.getFullYear();
@@ -26,6 +32,11 @@ function MessageForm() {
     }
 
   const todayDate = getFormattedDate();
+
+  function scrollToBottom() {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -48,6 +59,16 @@ function MessageForm() {
     <> 
       
           <div className='messages-output'>
+              {user && !privateMemberMsg?._id && <div className='alert alert-info'>You are in the  {currentRoom} room.</div> }
+              {user && privateMemberMsg?._id && (
+                <>
+                <div className="alert alert-info conversation-info">
+                    <div>
+                      Your private room with {privateMemberMsg.name} <img src={ privateMemberMsg.picture} className="conversation-profile-picture" />
+                    </div>
+                </div>
+                </>
+              )}
               {!user && <div className='alert alert-danger'>Please login to access the chat.</div> }  
               {/* to display the messages */}
               {/* reminder: the (({})) in the map is for destructuring */}
@@ -55,12 +76,21 @@ function MessageForm() {
                 <div key={index} >
                     <p className="alert alert-info text-center message-date-indicator">{date}</p>
                     {messagesByDate?.map(({ content, time, from: sender }, msgIndex) => (
-                        <div className="message" key={msgIndex} >
-                          <p>{content}</p>
+                        <div className={sender?.email == user?.email ? "message-date" : "incoming-message"} key={msgIndex} >
+                          <div className="message-inner" >
+                              <div className="d-flex align-items-center mb-3" >
+                                  <img src={sender.picture} style={{ width: 35, height: 35, objectFit: "cover", borderRadius: "50%", marginRight: 10  }} />
+                                  <p className="message-sender" >{sender._id == user?._id ? "You" : sender.name} </p>
+                              </div>
+                                  <p className="message-content">{content}</p>
+                                  <p className="message-timestamp-left">{time}</p>
+                          </div>
                         </div>
                     ))}
                 </div>
               ))}    
+              {/* for automatic scroling */}
+              <div ref={messageEndRef} ></div>
             </div>
             <Form onSubmit={handleSubmit} >
 

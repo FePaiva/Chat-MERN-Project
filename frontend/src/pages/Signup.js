@@ -80,8 +80,8 @@ function Signup() {
                   <i className="fas fa-plus-circle add-picture-icon"></i>
                 </label>
                 <input type="file" id="image-upload" hidden accept="image/png, image/jpeg, image/jpg" onChange={validateAvatar}/>
-
               </div>
+              {error && <p className="alert alert-danger" >{error.data}</p>}
             <Form.Group className="mb-3" controlId="formBasicName">
               <Form.Label>Name</Form.Label>
               <Form.Control type="text" placeholder="Your name" onChange={(e)=> setName(e.target.value)} value={name}/>
@@ -103,7 +103,7 @@ function Signup() {
               <Form.Check type="checkbox" label="Check me out" />
             </Form.Group> */}
             <Button variant="primary" type="submit">
-              {uploadingImg ? "Signing you up ... " : "Signup"}
+              {uploadingImg || isLoading ? "Signing you up ... " : "Signup"}
             </Button>
             <div className="py-4"> 
               <p className="text-center">Oh, you are a member! - <Link to="/login">Login</Link> </p>

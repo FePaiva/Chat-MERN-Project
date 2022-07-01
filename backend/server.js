@@ -73,9 +73,10 @@ io.on('connection', (socket) => {
 
   // to get a room by default, so the user can join an specified room.
   // emitting and listening for events. Join-room is an event in the frontend, which will trigger sending the event room-messages to the client in the frontend.
-  socket.on('join-room', async(room) => {
-    socket.join(room);
-    let roomMessages = await getLastMessagesFromRoom(room);
+  socket.on('join-room', async(newRoom, previousRoom) => {
+    socket.join(newRoom);
+    socket.leave(previousRoom);
+    let roomMessages = await getLastMessagesFromRoom(newRoom);
     roomMessages = sortRoomMessagesByDate(roomMessages);
     // socket.emit emits the messsages only to the specific user who joined the room.
     socket.emit('room-messages', roomMessages)
