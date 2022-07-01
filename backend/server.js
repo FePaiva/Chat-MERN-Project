@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 // link to user routes
-app.use('/users',userRoutes)
+app.use('/users', userRoutes)
 require('./connection')
 
 
@@ -41,6 +41,7 @@ async function getLastMessagesFromRoom(room){
  // Stage 2: Group by date
  {
     $group: { _id: "$date", messagesByDate: { $push: "$$ROOT" }}
+    
  }
   ])
   return roomMessages;
@@ -52,12 +53,12 @@ function sortRoomMessagesByDate(messages){
     let date2 = b._id.split('/');
     // default is MMDDYYYY. Need to arrange by YYYYMMDD in order to sort.
     date1 = date1[2] + date1[0] + date1[1]
-    date2 = date2[2] + date2[0] + date2[1]
+    date2 =  date2[2] + date2[0] + date2[1];
 
     return date1 < date2 ? -1 : 1
-
   })
 }
+
 
 // socket connection from frontend
 io.on('connection', (socket) => {
@@ -83,8 +84,8 @@ io.on('connection', (socket) => {
   // to send messages
   socket.on('message-room', async(room, content, sender, time, date) => {
     // checking if getting the content.
-    // console.log('new message', content)
-    const newMessage = await Message.create({ content, from: sender, time, date, to: room});
+    console.log('new message', content)
+    const newMessage = await Message.create({ content, from: sender, socket, time, date, to: room});
     let roomMessages = await getLastMessagesFromRoom(room);
     roomMessages = sortRoomMessagesByDate(roomMessages);
     // to send messages to room
@@ -100,7 +101,7 @@ io.on('connection', (socket) => {
       const {_id, newMessages} = req.body;
       const user = await User.findById(_id);
       user.status = "offline";
-      // new messages from fronted. Need to save that state.
+      // new messages coming from the fronted. Need to save that state.
       user.newMessages = newMessages;
       await user.save();
       const members = await User.find();
@@ -117,6 +118,6 @@ io.on('connection', (socket) => {
 })
 
 server.listen(PORT, () => {
-  console.log('listening on port', PORT)
+  console.log('listening to port', PORT)
 })
 

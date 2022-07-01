@@ -1,14 +1,14 @@
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 
 const MessageSchema = new mongoose.Schema({
-  constent: String,
-  from: Object, 
+  content: String,
+  from: Object,
   socketid: String,
   time: String,
   date: String,
-  to: String,
+  to: String
 })
 
 const Message = mongoose.model('Message', MessageSchema);
 
-module.exports = Message;
+module.exports = Message

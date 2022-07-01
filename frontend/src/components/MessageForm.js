@@ -12,17 +12,20 @@ function MessageForm() {
   // to access the state and grab the user (react-redux)
     const user = useSelector((state) => state.user);
  
-  function getFormattedDate() {
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = (date.getMonth() + 1).toString();
-    let day = date.getDate().toString();
+    function getFormattedDate() {
+      const date = new Date();
+      const year = date.getFullYear();
+      let month = (1 + date.getMonth()).toString();
 
-    month = month.length > 1 ? month : '0' + month;
-    day = day.length > 1 ? day : '0' + day;
+      month = month.length > 1 ? month : "0" + month;
+      let day = date.getDate().toString();
 
-    return month + '/' + day + '/' + year
-  }
+      day = day.length > 1 ? day : "0" + day;
+
+      return month + "/" + day + "/" + year;
+    }
+
+  const todayDate = getFormattedDate();
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -31,14 +34,13 @@ function MessageForm() {
     const minutes = today.getMinutes() < 10 ? "0" + today.getMinutes() : today.getMinutes();
     const time = today.getHours() + ":" + minutes;
     const roomId = currentRoom;
-    socket.emit('message-room', roomId, message, time,todayDate, user);
-    setMessage('');
+    socket.emit("message-room", roomId, message, user, time, todayDate );
+    setMessage("");
   }
 
-  const todayDate = getFormattedDate();
 
   socket.off("room-messages").on("room-messages", (roomMessages) => {
-    // console.log("room messages", roomMessages);
+    console.log("room messages", roomMessages);
     setMessages(roomMessages);
   });
   
@@ -47,7 +49,19 @@ function MessageForm() {
       
           <div className='messages-output'>
               {!user && <div className='alert alert-danger'>Please login to access the chat.</div> }  
-          </div>  
+              {/* to display the messages */}
+              {/* reminder: the (({})) in the map is for destructuring */}
+              {user && messages.map(({ _id: date, messagesByDate }, index) => (
+                <div key={index} >
+                    <p className="alert alert-info text-center message-date-indicator">{date}</p>
+                    {messagesByDate?.map(({ content, time, from: sender }, msgIndex) => (
+                        <div className="message" key={msgIndex} >
+                          <p>{content}</p>
+                        </div>
+                    ))}
+                </div>
+              ))}    
+            </div>
             <Form onSubmit={handleSubmit} >
 
                 <Row>

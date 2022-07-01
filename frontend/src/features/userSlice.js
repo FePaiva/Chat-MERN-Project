@@ -6,8 +6,18 @@ export const userSlice = createSlice({
     initialState: null,
     // actions to change the user state
     reducers: {
-      addNotifications: (state, { payload}) => {},
-      resetNotifications: (state, { payload}) => {},
+      addNotifications: (state, { payload}) => {
+        // the notification will be the new message
+        if (state.newMessages[payload]) {
+          // to increase every time there is a new message
+            state.newMessages[payload] = state.newMessages[payload] + 1;
+        } else {
+            state.newMessages[payload] = 1;
+        }
+      },
+      resetNotifications: (state, { payload}) => {
+        delete state.newMessages[payload];
+      },
     },
 // to help save the state
     extraReducers: (builder) => {
